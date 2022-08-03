@@ -6,7 +6,7 @@ JavaWeb练手项目，系统分为PC端的管理系统和移动端的点餐系�
 
 管理系统管理员工，菜品和套餐信息，并可以查看移动端用户的下单信息。
 
-![登录界面](https://github.com/Echo-xzp/reggie/tree/master/img/login.png)
+![登录界面](https://github.com/Echo-xzp/reggie/raw/master/img/login.png)
 
 ![展示1](https://github.com/Echo-xzp/reggie/tree/master/img/img.png)
 
