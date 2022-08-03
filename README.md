@@ -18,7 +18,7 @@ JavaWeb练手项目，系统分为PC端的管理系统和移动端的点餐系�
 点餐系统用户可以查看管理端上传的菜品与套餐信息，可以将菜品添加入购物车，并进行下单。
 同时还能查看自己的历史订单信息，一键再下单。
 
-![展示4](https://github.com/Echo-xzp/reggie/tree/master/img/img_4.png)
+![展示4](https://github.com/Echo-xzp/reggie/tree/master/img/img_4.png?raw=true)
 ![展示5](https://github.com/Echo-xzp/reggie/tree/master/img/img_5.png)
 ![展示6](https://github.com/Echo-xzp/reggie/tree/master/img/img_7.png)
 
