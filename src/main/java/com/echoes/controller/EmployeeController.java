@@ -121,7 +121,6 @@ public class EmployeeController {
         }
 
         request.getSession().setAttribute("employee",emp.getId());
-        BaseContext.setCurrentId(emp.getId());    //设置填充属性名
         return R.success(emp);
     }
 

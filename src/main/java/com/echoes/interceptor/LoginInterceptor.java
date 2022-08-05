@@ -42,8 +42,8 @@ public class LoginInterceptor implements HandlerInterceptor {
 //        log.info("本次拦截到"+requestURI);
 
         // 检查浏览器缓存，确定登录状态
-        Object employee = request.getSession().getAttribute("employee");
-        Object user = request.getSession().getAttribute("user");
+        Long employee = (Long)request.getSession().getAttribute("employee");
+        Long user = (Long) request.getSession().getAttribute("user");
 //        Long id = BaseContext.getCurrentId();
 //        log.info(employee);
 //        if (id == null) {
@@ -54,6 +54,10 @@ public class LoginInterceptor implements HandlerInterceptor {
             writer.flush();
             writer.close();
             return false;   // 拦截请求
+        } else if (user != null) {
+            BaseContext.setCurrentId(user);
+        } else if (employee != null) {
+            BaseContext.setCurrentId(employee);
         }
         return  true;
 
