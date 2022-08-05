@@ -7,9 +7,9 @@ import com.echoes.common.R;
 import com.echoes.dto.DishDto;
 import com.echoes.entity.Category;
 import com.echoes.entity.Dish;
-import com.echoes.service.CategoryService;
-import com.echoes.service.DishFlavorService;
-import com.echoes.service.DishService;
+import com.echoes.entity.Setmeal;
+import com.echoes.entity.SetmealDish;
+import com.echoes.service.*;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -39,6 +39,9 @@ public class DishController {
 
     @Autowired
     private CategoryService categoryService;
+
+    @Autowired
+    private SetmealDishService setmealDishService;
 
     /**
      * @Name : save
@@ -81,7 +84,15 @@ public class DishController {
     @DeleteMapping
     public R<String> delete(Long[] ids){
         for (Long id : ids) {
-            if (dishService.getById(id).getStatus() == 1){
+
+            LambdaQueryWrapper<SetmealDish> queryWrapper = new LambdaQueryWrapper<>();
+            queryWrapper.eq(SetmealDish::getDishId,id);
+            List<SetmealDish> list = setmealDishService.list(queryWrapper);
+
+            if (list != null){
+                return R.error("该菜品被其他套餐包含!");
+
+            }else if (dishService.getById(id).getStatus() == 1){
                 return R.error("非停售菜品不可删除！");
             }
             dishService.removeById(id);

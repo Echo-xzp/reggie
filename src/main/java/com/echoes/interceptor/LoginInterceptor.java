@@ -1,6 +1,7 @@
 package com.echoes.interceptor;
 
 import com.alibaba.fastjson.JSON;
+import com.echoes.common.BaseContext;
 import com.echoes.common.R;
 import lombok.extern.log4j.Log4j2;
 import lombok.extern.slf4j.Slf4j;
@@ -43,8 +44,10 @@ public class LoginInterceptor implements HandlerInterceptor {
         // 检查浏览器缓存，确定登录状态
         Object employee = request.getSession().getAttribute("employee");
         Object user = request.getSession().getAttribute("user");
+//        Long id = BaseContext.getCurrentId();
 //        log.info(employee);
-        if (employee == null && user == null) {
+//        if (id == null) {
+        if (user == null && employee == null) {
 //            log.info("未登录");
             PrintWriter writer = response.getWriter();
             writer.write(JSON.toJSONString(R.error("NOTLOGIN")));   // 返回未登录JSON数据给前端

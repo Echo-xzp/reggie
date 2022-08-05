@@ -6,21 +6,28 @@ import org.springframework.web.context.request.RequestContextHolder;
 /**
  * @Author : Xiaozp
  * @ClassName : CurrentEmpId
- * @Description : 利用RequestContextHolder获取当前会话中存取的属性
+ * @Description : 基于ThreadLocal封装工具类，用户保存和获取当前登录用户id
  * @create : 2022/7/26 17:39
  * @Version : v1.0
  * @Powered By Corner Lab
  */
-public class BaseContext {
 
-    static private String name = new String();
-    static public Long getCurrentId(){
-        RequestAttributes attributes = RequestContextHolder.currentRequestAttributes();
-        Long empId = (Long)attributes.getAttribute(name,RequestAttributes.SCOPE_SESSION);
-        return empId;
+public class BaseContext {
+    private static ThreadLocal<Long> threadLocal = new ThreadLocal<>();
+
+    /**
+     * 设置值
+     * @param id
+     */
+    public static void setCurrentId(Long id){
+        threadLocal.set(id);
     }
 
-    static public void setName(String s){
-        name = s;
+    /**
+     * 获取值
+     * @return
+     */
+    public static Long getCurrentId(){
+        return threadLocal.get();
     }
 }

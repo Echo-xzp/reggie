@@ -72,7 +72,7 @@ public class UserController {
 
             session.setAttribute("user",id);
             session.removeAttribute("code");
-            BaseContext.setName("user");
+            BaseContext.setCurrentId(id);
             return R.success(userDto);
         }else {
             return R.error("验证码错误!");
