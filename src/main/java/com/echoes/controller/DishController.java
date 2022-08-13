@@ -10,12 +10,12 @@ import com.echoes.entity.Dish;
 import com.echoes.entity.Setmeal;
 import com.echoes.entity.SetmealDish;
 import com.echoes.service.*;
+import com.echoes.utils.RedisUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -41,6 +41,9 @@ public class DishController {
     private CategoryService categoryService;
 
     @Autowired
+    private RedisUtil redisUtil;
+
+    @Autowired
     private SetmealDishService setmealDishService;
 
     /**
@@ -56,6 +59,10 @@ public class DishController {
 
         dishService.saveWithFlavor(dishDto);
 
+        String key = "dish_"+dishDto.getCategoryName()+"_1";
+
+        redisUtil.del(key);     //清理redis缓存
+
         return R.success("新增菜品成功！");
     }
 
@@ -70,6 +77,10 @@ public class DishController {
     public R<String> update(@RequestBody DishDto dishDto){
 
         dishService.updateWithFlavor(dishDto);
+
+        String key = "dish_"+dishDto.getCategoryName()+"_1";
+
+        redisUtil.del(key);     //清理redis缓存
 
         return R.success("修改成功！");
     }
@@ -143,6 +154,14 @@ public class DishController {
      */
     @GetMapping("/list")
     public R<List<DishDto>> list(Dish dish){
+        String key = "dish_"+dish.getCategoryId()+"_"+dish.getStatus();
+
+        List<DishDto> dishDtoList = null;
+        dishDtoList = (List<DishDto>) redisUtil.get(key);
+        if (dishDtoList != null) {
+            return R.success(dishDtoList);
+        }
+
         LambdaQueryWrapper<Dish> queryWrapper = new LambdaQueryWrapper<>();
         queryWrapper.eq(dish.getCategoryId() != null,
                         Dish::getCategoryId,dish.getCategoryId());
@@ -150,9 +169,11 @@ public class DishController {
         queryWrapper.eq(Dish::getStatus,1);
         queryWrapper.orderByAsc(Dish::getSort).orderByDesc(Dish::getUpdateTime);
 
-        List<DishDto> list = dishService.listWithFlavor(queryWrapper);
+        dishDtoList = dishService.listWithFlavor(queryWrapper);
 
-        return R.success(list);
+        redisUtil.set(key,dishDtoList,3600);    // 缓存保存一个小时
+
+        return R.success(dishDtoList);
     }
 
 

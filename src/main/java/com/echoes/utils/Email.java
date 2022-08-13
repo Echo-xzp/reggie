@@ -64,7 +64,10 @@ public class Email {
         // 设置邮件标题
         message.setSubject("睿纪外卖登录提醒:");
         // 设置邮件内容
-        message.setText("尊敬的用户:\n  您好,您正在尝试登录睿纪外卖系统,您的登录验证码为: "+code+"\n请勿泄露给他人！");
+        message.setText(
+                "尊敬的用户:\n" +
+                        "  您好,您正在尝试登录睿纪外卖系统,您的登录验证码为: "+code+"\n" +
+                        "验证码五分钟内有效，请勿泄露给他人！");
         // 得到邮差对象
         Transport transport = session.getTransport();
         // 连接自己的邮箱账户

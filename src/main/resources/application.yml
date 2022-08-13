@@ -2,15 +2,29 @@ server:
   port: 80
   servlet:
     context-path:
+
 spring:
   application:
     name: reggie
+
   datasource:
     druid:
       driver-class-name: com.mysql.cj.jdbc.Driver
       url: jdbc:mysql://localhost:3306/reggie?serverTimezone=Asia/Shanghai&useUnicode=true&characterEncoding=utf-8&zeroDateTimeBehavior=convertToNull&useSSL=false&allowPublicKeyRetrieval=true
       username: root
       password: 123456
+
+  redis:
+    host: 127.0.0.1
+    port: 6379
+    database: 0   #当前操作数据库
+#    password:
+    jedis:
+      pool:
+        max-active: 8   #最大连接数
+        max-wait: 1ms   # 最大阻塞等待时间
+        max-idle: 4   #最大空闲连接
+        min-idle: 0   #最小空闲连接
 
 mybatis-plus:
   configuration:
@@ -32,5 +46,5 @@ reggie:
   employeePassword: "123456"
 
   # smtp发送邮件邮箱地址
-  email: ""
-  emailPassword: ""
+  email: "echoeme@qq.com"
+  emailPassword: "oevdxmjuvvzodgbc"

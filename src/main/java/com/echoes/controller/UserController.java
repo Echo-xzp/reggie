@@ -8,6 +8,7 @@ import com.echoes.dto.UserDto;
 import com.echoes.entity.User;
 import com.echoes.service.UserService;
 import com.echoes.utils.Email;
+import com.echoes.utils.RedisUtil;
 import com.echoes.utils.ValidateCodeUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -36,6 +37,9 @@ public class UserController {
     @Autowired
     private UserService userService;
 
+    @Autowired
+    private RedisUtil redisUtil;
+
     /**
      * @Name : login
      * @description : 用户登录
@@ -48,7 +52,9 @@ public class UserController {
     public R<User> login(@RequestBody UserDto userDto, HttpSession session){
         log.info("User : {}",userDto);
 
-        String code = (String)session.getAttribute("code");
+//        String code = (String)session.getAttribute("code");
+
+        String code = redisUtil.get(userDto.getEmail()).toString();
 
         String userCode = userDto.getCode().toString();
         String md5UserCode = DigestUtils.md5DigestAsHex(userCode.getBytes(StandardCharsets.UTF_8));
@@ -71,7 +77,8 @@ public class UserController {
             }
 
             session.setAttribute("user",id);
-            session.removeAttribute("code");
+//            session.removeAttribute("code");
+            redisUtil.del(userDto.getEmail());
             return R.success(userDto);
         }else {
             return R.error("验证码错误!");
@@ -111,7 +118,8 @@ public class UserController {
             log.info(code);
             String md5Code = DigestUtils.md5DigestAsHex(code.getBytes(StandardCharsets.UTF_8));
 //            log.info(md5Code);
-            session.setAttribute("code",md5Code);
+//            session.setAttribute("code",md5Code);
+            redisUtil.set(email,md5Code,300);   // 五分钟过期
             session.setAttribute("email",email);
 
             try {
