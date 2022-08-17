@@ -100,7 +100,7 @@ public class DishController {
             queryWrapper.eq(SetmealDish::getDishId,id);
             List<SetmealDish> list = setmealDishService.list(queryWrapper);
 
-            if (list != null){
+            if (!list.isEmpty()){
                 return R.error("该菜品被其他套餐包含!");
 
             }else if (dishService.getById(id).getStatus() == 1){
